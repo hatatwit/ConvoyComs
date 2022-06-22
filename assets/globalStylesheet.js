@@ -6,4 +6,13 @@ export const globalStylesheet = StyleSheet.create({
       backgroundColor: '#fff',
       padding: 25,
     },
+    listItem:{
+      margin:10,
+      padding:10,
+      backgroundColor:"#FFF",
+      width:"80%",
+      flex:1,
+      flexDirection:"row",
+      borderRadius:5
+    }
   });

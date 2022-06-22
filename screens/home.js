@@ -5,9 +5,9 @@ import { globalStylesheet } from '../assets/globalStylesheet';
 
 export default function Home({navigation}) {
 
-  // const connectBtn = () => {
-  //   navigation.push('Call');
-  // };
+  const connectBtn = () => {
+    navigation.push('Call');
+  };
 
   const[device1, setDevice1] = useState(false);
   const[device2, setDevice2] = useState(false);
@@ -45,7 +45,7 @@ export default function Home({navigation}) {
         checked={device3}
         onPress={()=>setDevice3(!device3)}
       />
-      <Button title='Connect' onPress={() =>  navigation.navigate('Call', selectedDevice)}/>
+      <Button title='Connect' onPress={connectBtn}/>
     </View>
   );
 }

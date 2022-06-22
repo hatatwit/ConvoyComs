@@ -1,12 +1,44 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { globalStylesheet } from '../assets/globalStylesheet'
+import { Text, View, FlatList, Image, Button } from 'react-native';
+import { globalStylesheet } from '../assets/globalStylesheet';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
-export default function Call({ navigation }) {
+function Item({ item }) {
   return (
-    <View style={globalStylesheet.container}>
-      <Text>{ navigation.selectedDevice }</Text>
+    <View style={globalStylesheet.listItem}>
+      <Image source={{uri:'https://cdn-icons-png.flaticon.com/512/1946/1946392.png'}}  style={{width:50, height:50,borderRadius:20}} />
+      <View style={{alignItems:"center",flex:1}}>
+        <Text>{item.name}</Text>
+      </View>
     </View>
   );
 }
 
+export default class App extends React.Component {
+  state = {
+    data:[
+        {"name": "Device 1"},
+        {"name": "Device 2"},
+        {"name": "Device 3"},
+    ]
+  }
+
+  render(){
+    return (
+      <View style={globalStylesheet.container}>
+        <FlatList
+          style={{flex:1}}
+          data={this.state.data}
+          renderItem={({ item }) => <Item item={item}/>}
+        />
+        <FontAwesome.Button name="phone-xmark" backgroundColor="#3b5998">
+          Disconnected
+        </FontAwesome.Button>
+        <Button title='Disconnected'/>
+        <Button title='Unmute/Mute'/>
+        <Button title='Add'/>
+
+      </View>
+    );
+  }
+}
