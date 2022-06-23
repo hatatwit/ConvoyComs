@@ -1,3 +1,4 @@
+import { width } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
 import { StyleSheet } from "react-native";
 
 export const globalStylesheet = StyleSheet.create({
@@ -14,5 +15,16 @@ export const globalStylesheet = StyleSheet.create({
       flex:1,
       flexDirection:"row",
       borderRadius:5
-    }
+    },
+    btnContainer: {
+      flexDirection: 'row',
+      alignContent: 'space-between',
+      justifyContent: 'space-around',
+      alignItems: 'center'
+    },
+    btn: {
+      backgroundColor: "#000000",
+      padding: 30, 
+      borderRadius: 40
+    },
   });

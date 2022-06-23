@@ -1,7 +1,8 @@
 import React from 'react';
-import { Text, View, FlatList, Image, Button } from 'react-native';
+import { Text, View, FlatList, Image } from 'react-native';
 import { globalStylesheet } from '../assets/globalStylesheet';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+
 
 function Item({ item }) {
   return (
@@ -31,13 +32,11 @@ export default class App extends React.Component {
           data={this.state.data}
           renderItem={({ item }) => <Item item={item}/>}
         />
-        <FontAwesome.Button name="phone-xmark" backgroundColor="#3b5998">
-          Disconnected
-        </FontAwesome.Button>
-        <Button title='Disconnected'/>
-        <Button title='Unmute/Mute'/>
-        <Button title='Add'/>
-
+        <View style={globalStylesheet.btnContainer}>
+          <FontAwesome.Button name='phone' style={globalStylesheet.btn}  />
+          <FontAwesome.Button name='microphone' style={globalStylesheet.btn}  />
+          <FontAwesome.Button name='plus' style={globalStylesheet.btn}  />
+        </View>
       </View>
     );
   }
