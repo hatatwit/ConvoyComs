@@ -23,6 +23,10 @@ export default class App extends React.Component {
   constructor(props){
     super();
     this.manager = new BleManager();
+
+    this.searchedDevice = [];
+    this.connected = false;
+
     
     this.state = {
       data:[
@@ -33,11 +37,79 @@ export default class App extends React.Component {
     }
   }
 
+
   componentDidMount(){
     const {navigation}=this.props
-    console.log(navigation.state.params)
 
+    // only pushing one for today, rather than loop
+    let devices = navigation.state.params; 
+
+    let firstDevice = devices.otherParam[0]
+
+    if(this.searchedDevice.indexOf(firstDevice) === -1){
+
+      this.searchedDevice.push(firstDevice)
+
+    }
+
+    const subscription = this.manager.onStateChange((state) => {
+      if (state === 'PoweredOn') {
+          console.log(state)
+          this.scanAndConnect();
+          subscription.remove();
+      }
+      else{
+          console.log("powered off")
+          console.log(state)
+      }
+  }, true);
   }
+
+  async scanAndConnect() {
+
+
+    this.manager.startDeviceScan(null, null, (error, device) => {
+        // To avoid bluetooth access errors, use the permissions API
+
+        if (error) {
+            console.log("Scan operation error: " + JSON.stringify(error))
+            // Handle error (scanning will be stopped automatically)
+            return
+        }
+
+        // Check if it is a device you are looking for based on advertisement data
+        // or other criteria.
+        if (device.name === this.searchedDevice[0]) {
+
+          this.manager.stopDeviceScan();
+
+            // Proceed with connection.
+
+          device.isConnected()
+            .then((isConnected)=>{
+              console.log('isConnected:: ', isConnected)
+              return isConnected ? device : device.connect();
+            })
+            .then((d) =>{
+              console.log('connect::', d);
+              return d.discoverAllServicesAndCharacteristics();
+            })
+            .then((d) =>{
+              console.log('discoverAllServicesAndCharacteristics::', d);
+              return d.services;
+            })
+            
+            
+        }
+        
+    });
+}
+
+componentWillUnmount() {
+  this.manager.stopDeviceScan();
+  this.manager.destroy();
+  delete this.manager;
+}
   
 
   render(){    

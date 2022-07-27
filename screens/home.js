@@ -22,9 +22,14 @@ export default function Home({navigation}) {
   const registeredDevices = [] // can be filled by user somehow
 
   const select = () => {
-    if(device1 == true){
+    if(device1 == true && selectedDevice.indexOf('JLab GO Air') === -1){
       // make it so it pushes only unique
-      selectedDevice.push("JLab Go Air")
+
+      selectedDevice.push("JLab GO Air")
+    }
+    if(device1 == false && selectedDevice.indexOf(device1) > -1){
+      let i = selectedDevice.indexOf(device1)
+      selectedDevice.split(i, 1)
     }
     if(device2 == true){
       selectedDevice.push("Device 2")
@@ -39,7 +44,7 @@ export default function Home({navigation}) {
     <View style={globalStylesheet.container}>
       <Text>Nearby Devices</Text>
       <CheckBox 
-        title='JLab Go Air'
+        title='JLab GO Air'
         checked={device1}
         onPress={()=>setDevice1(!device1)}
       />
