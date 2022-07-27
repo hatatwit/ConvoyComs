@@ -23,7 +23,7 @@ export default function Home({navigation}) {
 
   const select = () => {
     if(device1 == true){
-      
+      // make it so it pushes only unique
       selectedDevice.push("JLab Go Air")
     }
     if(device2 == true){

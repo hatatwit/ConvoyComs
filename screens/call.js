@@ -2,6 +2,8 @@ import React from 'react';
 import { Text, View, FlatList, Image } from 'react-native';
 import { globalStylesheet } from '../assets/globalStylesheet';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import {BleManager} from 'react-native-ble-plx';
+
 
 
 function Item({ item }) {
@@ -20,6 +22,7 @@ export default class App extends React.Component {
 
   constructor(props){
     super();
+    this.manager = new BleManager();
     
     this.state = {
       data:[
@@ -33,7 +36,6 @@ export default class App extends React.Component {
   componentDidMount(){
     const {navigation}=this.props
     console.log(navigation.state.params)
-    
 
   }
   

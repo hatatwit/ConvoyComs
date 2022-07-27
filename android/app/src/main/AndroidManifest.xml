@@ -1,9 +1,49 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.seniorproj.convoycoms">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.seniorproj.convoycoms">
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
   <uses-permission android:name="android.permission.VIBRATE"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+
+  <!-- Add this line if your application always requires BLE. More info can be found on:
+      https://developer.android.com/guide/topics/connectivity/bluetooth-le.html#permissions
+   -->
+  <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
+
+
+  <uses-feature android:name="android.hardware.bluetooth" android:required="true"/>
+
+  <!-- Request legacy Bluetooth permissions on older devices. -->
+  <uses-permission android:name="android.permission.BLUETOOTH"
+      android:maxSdkVersion="30" />
+
+  <!-- Android Docs "If you want your app to initiate device discovery or manipulate Bluetooth settings, you must declare the BLUETOOTH_ADMIN permission" -->
+  <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
+      android:maxSdkVersion="30" />
+
+  <!-- Needed only if your app looks for Bluetooth devices.
+       If your app doesn't use Bluetooth scan results to derive physical
+       location information, you can strongly assert that your app
+       doesn't derive physical location. -->
+  <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+
+  <!-- Needed only if your app makes the device discoverable to Bluetooth
+       devices. -->
+  <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+
+  <!-- Needed only if your app communicates with already-paired Bluetooth
+       devices. -->
+  <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+  <!-- Adding this in to add in anything that was previously excluded which may be causing my current BLE Cannot start scanning operation-->
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
+      tools:ignore="CoarseFineLocation" />
+
+
+
   <queries>
     <intent>
       <action android:name="android.intent.action.VIEW"/>
