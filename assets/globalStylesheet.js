@@ -25,6 +25,20 @@ export const globalStylesheet = StyleSheet.create({
     btn: {
       backgroundColor: "#000000",
       padding: 30, 
-      borderRadius: 40
+      // borderRadius: 40
     },
+    flatList: {
+      flex: 1,
+      paddingVertical: 25,
+      paddingHorizontal: 15,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      borderBottomWidth: 1,
+      borderBottomColor: 'white'
+    },
+    txt: {
+      fontSize: 18,
+      padding: 5,
+    }
+
   });

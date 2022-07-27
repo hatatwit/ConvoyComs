@@ -9,7 +9,7 @@ function Item({ item }) {
     <View style={globalStylesheet.listItem}>
       <Image source={{uri:'https://cdn-icons-png.flaticon.com/512/1946/1946392.png'}}  style={{width:50, height:50,borderRadius:20}} />
       <View style={{alignItems:"center",flex:1}}>
-        <Text>{item.name}</Text>
+        <Text style={globalStylesheet.txt}>{item.name}</Text>
       </View>
     </View>
   );
