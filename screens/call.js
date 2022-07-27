@@ -16,15 +16,30 @@ function Item({ item }) {
 }
 
 export default class App extends React.Component {
-  state = {
-    data:[
-        {"name": "Device 1"},
-        {"name": "Device 2"},
-        {"name": "Device 3"},
-    ]
+
+
+  constructor(props){
+    super();
+    
+    this.state = {
+      data:[
+          {"name": "Device 1"},
+          {"name": "Device 2"},
+          {"name": "Device 3"},
+      ]
+    }
   }
 
-  render(){
+  componentDidMount(){
+    const {navigation}=this.props
+    console.log(navigation.state.params)
+    
+
+  }
+  
+
+  render(){    
+
     return (
       <View style={globalStylesheet.container}>
         <FlatList
