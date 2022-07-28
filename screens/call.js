@@ -53,10 +53,13 @@ export default class App extends React.Component {
     this.connected = false;
 
 
+    console.log('THERE')
+    console.log(props)
     // only pushing one for today, rather than loop
     let devices = props.navigation.state.params; 
 
-    let firstDevice = devices.otherParam[0]
+    let firstDevice = devices.otherParam
+    console.log('Firrst device' + firstDevice)
 
     if(this.searchedDevice.indexOf(firstDevice) === -1){
 

@@ -1,70 +1,58 @@
-import { useState } from 'react';
-import { Text, View, Button } from 'react-native';
-import { CheckBox } from 'react-native-elements';
+import React, { useState } from 'react';
+import { Text, View, Button, FlatList, TextInput, Alert } from 'react-native';
 import { globalStylesheet } from '../assets/globalStylesheet';
+
 
 export default function Home({navigation}) {
 
-
-
-  
   const connectBtn = () => {
-    select(); // adds variables into array
     //navigation.push('Call');
+    console.log("HERE")
+    console.log(data[1].userID)
     navigation.navigate('Call', {
-      otherParam: selectedDevice
+      otherParam: data[1].userID
     })
   };
 
-  const[device1, setDevice1] = useState(false);
-  const[device2, setDevice2] = useState(false);
-  const[device3, setDevice3] = useState(false);
-
-  const selectedDevice = [] // never pushed into by 'select' func, although would want to add devices in future to add into selectedDevice
-
-  const registeredDevices = [] // can be filled by user somehow
-
-  const select = () => {
-    if(device1 == true && selectedDevice.indexOf('BingoBongo') === -1){
-      // make it so it pushes only unique
-
-      selectedDevice.push("BingoBongo")
-    }
-    if(device1 == false && selectedDevice.indexOf(device1) > -1){
-      let i = selectedDevice.indexOf(device1)
-      selectedDevice.split(i, 1)
-    }
-    if(device2 == true){
-      selectedDevice.push("Device 2")
-    }
-    if(device3 == true){
-      selectedDevice.push("Device 3")
-    } 
-    console.log(selectedDevice)   
-  }
+  const [data, setData] = useState([{ }]);
+  const [userID, setUserID] = useState('');
 
   return (
-
     <View style={globalStylesheet.container}>
-      <Text>Nearby Devices</Text>
-      <CheckBox 
-        title='BingoBongo'
-        checked={device1}
-        onPress={()=>setDevice1(!device1)}
+      <TextInput
+        style={globalStylesheet.txt}
+        onChangeText={(userID) => setUserID(userID)}
+        placeholder={'Enter to check valid user ID'}
+        value={userID}
       />
-      <CheckBox 
-        title='Device 2'
-        checked={device2}
-        onPress={()=>setDevice2(!device2)}
+      <Button
+        title={'Check'}
+        onPress={() => {
+          // If userID valid -> Add to the list
+          if (userID) {
+            setData([...data, { userID: userID }]);
+            setUserID('');
+          } 
+          // If userID unvalid or missing input -> Display alert dialog to redirect to home screen
+          else{
+            Alert.alert('Error', 'Your input UserID cannot be found. Please try again!', [
+              {text: 'Try again', onPress: () => console.log('Alert closed')}, 
+            ])
+          }
+          console.log('Added new user ID');
+        }}
       />
-      <CheckBox 
-        title='Device 3'
-        checked={device3}
-        onPress={()=>setDevice3(!device3)}
+      <FlatList
+        keyExtractor={(item) => item}
+        data={data}
+        renderItem={({ item }) => <Text style={globalStylesheet.txt}>{item.userID}</Text>}
       />
       <Button title='Connect' onPress={connectBtn}/>
     </View>
-
   );
 }
+
+
+
+
 
