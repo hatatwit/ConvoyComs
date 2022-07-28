@@ -5,6 +5,9 @@ import { globalStylesheet } from '../assets/globalStylesheet';
 
 export default function Home({navigation}) {
 
+
+
+  
   const connectBtn = () => {
     select(); // adds variables into array
     //navigation.push('Call');
@@ -22,10 +25,10 @@ export default function Home({navigation}) {
   const registeredDevices = [] // can be filled by user somehow
 
   const select = () => {
-    if(device1 == true && selectedDevice.indexOf('JLab GO Air') === -1){
+    if(device1 == true && selectedDevice.indexOf('BingoBongo') === -1){
       // make it so it pushes only unique
 
-      selectedDevice.push("JLab GO Air")
+      selectedDevice.push("BingoBongo")
     }
     if(device1 == false && selectedDevice.indexOf(device1) > -1){
       let i = selectedDevice.indexOf(device1)
@@ -41,10 +44,11 @@ export default function Home({navigation}) {
   }
 
   return (
+
     <View style={globalStylesheet.container}>
       <Text>Nearby Devices</Text>
       <CheckBox 
-        title='JLab GO Air'
+        title='BingoBongo'
         checked={device1}
         onPress={()=>setDevice1(!device1)}
       />
@@ -60,6 +64,7 @@ export default function Home({navigation}) {
       />
       <Button title='Connect' onPress={connectBtn}/>
     </View>
+
   );
 }
 

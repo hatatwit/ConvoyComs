@@ -1,9 +1,34 @@
 import React from 'react';
-import { Text, View, FlatList, Image } from 'react-native';
+import { Text, View, FlatList, Image, PermissionsAndroid, Button } from 'react-native';
 import { globalStylesheet } from '../assets/globalStylesheet';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {BleManager} from 'react-native-ble-plx';
 
+
+
+
+const requestBluetoothPermission = async (props, component) =>{
+
+  try {
+      const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+          {
+              title:"Coolio Bluetooth Permission Request",
+              message: "GIVE US BEEGLETOOTH NOW",
+              buttonNeutral: "Ask me later",
+              buttonNegative: "Cancel",
+              buttonPositive: "OK"
+          }
+      );
+      if(granted == PermissionsAndroid.RESULTS.GRANTED){
+          console.log("You can use the bluetooth")
+      } else {
+          console.log("Bluetooth permission denied")
+      }
+  } catch(err){
+      console.warn(err)
+  }
+}
 
 
 function Item({ item }) {
@@ -27,22 +52,9 @@ export default class App extends React.Component {
     this.searchedDevice = [];
     this.connected = false;
 
-    
-    this.state = {
-      data:[
-          {"name": "Device 1"},
-          {"name": "Device 2"},
-          {"name": "Device 3"},
-      ]
-    }
-  }
-
-
-  componentDidMount(){
-    const {navigation}=this.props
 
     // only pushing one for today, rather than loop
-    let devices = navigation.state.params; 
+    let devices = props.navigation.state.params; 
 
     let firstDevice = devices.otherParam[0]
 
@@ -51,6 +63,17 @@ export default class App extends React.Component {
       this.searchedDevice.push(firstDevice)
 
     }
+    
+    this.state = {
+      data:[
+         {"name": this.searchedDevice[0]}
+      ]
+    }
+  }
+
+
+  componentDidMount(){
+
 
     const subscription = this.manager.onStateChange((state) => {
       if (state === 'PoweredOn') {
@@ -65,8 +88,11 @@ export default class App extends React.Component {
   }, true);
   }
 
-  async scanAndConnect() {
+  scanAndConnect() {
 
+    // remember about how manager destroys on unmount. 
+    // Try to request extra permissions, find the different between yours and this trang app
+    // restart app frequently to continue to retry
 
     this.manager.startDeviceScan(null, null, (error, device) => {
         // To avoid bluetooth access errors, use the permissions API
@@ -85,19 +111,41 @@ export default class App extends React.Component {
 
             // Proceed with connection.
 
-          device.isConnected()
-            .then((isConnected)=>{
-              console.log('isConnected:: ', isConnected)
-              return isConnected ? device : device.connect();
+          
+          device.connect()
+            .then((device) => {
+                console.log(device.discoverAllServicesAndCharacteristics())
+                return device.discoverAllServicesAndCharacteristics()
             })
-            .then((d) =>{
-              console.log('connect::', d);
-              return d.discoverAllServicesAndCharacteristics();
+            .then((device) => {
+                console.log("Working with device")
+                console.log(device)
+               // Do work on device with services and characteristics
             })
-            .then((d) =>{
-              console.log('discoverAllServicesAndCharacteristics::', d);
-              return d.services;
-            })
+            .catch((error) => {
+                // Handle errors
+                console.log("error" + JSON.stringify(error))
+            });
+
+          // device.isConnected()
+          //   .then((isConnected)=>{
+          //     toast("connecting...")
+          //     console.log('isConnected:: ', isConnected)
+          //     return isConnected ? device : device.connect();
+          //   })
+          //   .then((d) =>{
+          //     toast("Connected")
+          //     console.log('connect::', d);
+          //     return d.discoverAllServicesAndCharacteristics();
+          //   })
+          //   .then((d) =>{
+          //     console.log('discoverAllServicesAndCharacteristics::', d);
+          //     return d.services;
+          //   }).catch((error)=>{
+          //     console.log(JSON.stringify(error))
+          //   })
+
+
             
             
         }
@@ -115,7 +163,10 @@ componentWillUnmount() {
   render(){    
 
     return (
+
       <View style={globalStylesheet.container}>
+        <Button title="request bluetooth" onPress={requestBluetoothPermission} />
+
         <FlatList
           style={{flex:1}}
           data={this.state.data}
@@ -127,6 +178,7 @@ componentWillUnmount() {
           <FontAwesome.Button name='plus' style={globalStylesheet.btn}  />
         </View>
       </View>
+
     );
   }
 }
