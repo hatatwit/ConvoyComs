@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Text, View, Button, FlatList, TextInput, Alert } from 'react-native';
+import { CheckBox } from 'react-native-elements';
 import { globalStylesheet } from '../assets/globalStylesheet';
 
 
@@ -9,8 +10,14 @@ export default function Home({navigation}) {
     navigation.push('Call');
   };
 
-  const [data, setData] = useState([{ }]);
+  const [data, setData] = useState([]);
   const [userID, setUserID] = useState('');
+
+  const checkedHandler = (index) => {
+    const newData = [...data];
+    newData[index].isChecked = !newData[index].isChecked;
+    setData(newData);
+  }
 
   return (
     <View style={globalStylesheet.container}>
@@ -25,7 +32,7 @@ export default function Home({navigation}) {
         onPress={() => {
           // If userID valid -> Add to the list
           if (userID) {
-            setData([...data, { userID: userID }]);
+            setData([...data, { id: 0, userID: userID, isChecked: false }]);
             setUserID('');
           } 
           // If userID unvalid or missing input -> Display alert dialog to redirect to home screen
@@ -34,14 +41,26 @@ export default function Home({navigation}) {
               {text: 'Try again', onPress: () => console.log('Alert closed')}, 
             ])
           }
-          console.log('Added new user ID');
+          console.log('Added new user ID: ' + String(userID));
         }}
       />
       <FlatList
         keyExtractor={(item) => item}
         data={data}
-        renderItem={({ item }) => <Text style={globalStylesheet.txt}>{item.userID}</Text>}
+        renderItem={({ item, index }) => (
+          <View>
+            <CheckBox
+              title={item.userID}
+              checked={item.isChecked}
+              // onPress={() => item.isChecked(item.id=== true)}
+              onPress={() => {checkedHandler(index)}}
+            />
+            {/* <Text style={globalStylesheet.txt}>{item.userID}</Text> */}
+          </View>
+        )}
       />
+      
+
       <Button title='Connect' onPress={connectBtn}/>
     </View>
   );
