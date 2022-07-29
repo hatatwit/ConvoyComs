@@ -1,21 +1,60 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, View, Button, FlatList, TextInput, Alert } from 'react-native';
 import { globalStylesheet } from '../assets/globalStylesheet';
+import { BleManager } from 'react-native-ble-plx';
+import useConstructor from './useConstructor';
+
+const Home = ({navigation}) => {
+
+  const [data, setData] = useState([{ }]);
+  const [userID, setUserID] = useState('');
+
+  const [manager, setManager] = useState(new BleManager());
+
+  useEffect(() => {
+
+    const subscription = manager.onStateChange((state) => {
+        if (state === 'PoweredOn') {
+            scanAndConnect();
+            subscription.remove();
+            setTimeout(function(){
+              manager.stopDeviceScan();
+            }, 5000);
+        }
+    }, true);
+    return () => subscription.remove();
+  }, [manager]);
 
 
-export default function Home({navigation}) {
+  const scanAndConnect = () => {
+  
+    manager.startDeviceScan(null, null, (error, device) => { 
+
+          const index = data.findIndex(object =>{
+            return object.userID === device.name
+          })
+          if(index === -1 && device.name){
+            setData([...data, { userID: device.name }]);
+          }
+
+     });
+
+}
+
+
 
   const connectBtn = () => {
-    //navigation.push('Call');
-    console.log("HERE")
-    console.log(data[1].userID)
+    console.log(JSON.stringify(data))
+    if(manager){
+      manager.destroy();
+    }
     navigation.navigate('Call', {
       otherParam: data[1].userID
     })
   };
 
-  const [data, setData] = useState([{ }]);
-  const [userID, setUserID] = useState('');
+
+
 
   return (
     <View style={globalStylesheet.container}>
@@ -42,8 +81,9 @@ export default function Home({navigation}) {
           console.log('Added new user ID');
         }}
       />
+
       <FlatList
-        keyExtractor={(item) => item}
+        keyExtractor={(item) => item.userID}
         data={data}
         renderItem={({ item }) => <Text style={globalStylesheet.txt}>{item.userID}</Text>}
       />
@@ -51,6 +91,8 @@ export default function Home({navigation}) {
     </View>
   );
 }
+
+export default Home;
 
 
 

@@ -53,8 +53,6 @@ export default class App extends React.Component {
     this.connected = false;
 
 
-    console.log('THERE')
-    console.log(props)
     // only pushing one for today, rather than loop
     let devices = props.navigation.state.params; 
 
@@ -93,9 +91,6 @@ export default class App extends React.Component {
 
   scanAndConnect() {
 
-    // remember about how manager destroys on unmount. 
-    // Try to request extra permissions, find the different between yours and this trang app
-    // restart app frequently to continue to retry
 
     this.manager.startDeviceScan(null, null, (error, device) => {
         // To avoid bluetooth access errors, use the permissions API
@@ -128,28 +123,7 @@ export default class App extends React.Component {
             .catch((error) => {
                 // Handle errors
                 console.log("error" + JSON.stringify(error))
-            });
-
-          // device.isConnected()
-          //   .then((isConnected)=>{
-          //     toast("connecting...")
-          //     console.log('isConnected:: ', isConnected)
-          //     return isConnected ? device : device.connect();
-          //   })
-          //   .then((d) =>{
-          //     toast("Connected")
-          //     console.log('connect::', d);
-          //     return d.discoverAllServicesAndCharacteristics();
-          //   })
-          //   .then((d) =>{
-          //     console.log('discoverAllServicesAndCharacteristics::', d);
-          //     return d.services;
-          //   }).catch((error)=>{
-          //     console.log(JSON.stringify(error))
-          //   })
-
-
-            
+            });            
             
         }
         
