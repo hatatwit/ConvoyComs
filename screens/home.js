@@ -37,6 +37,7 @@ const Home = ({navigation}) => {
           if(index === -1 && device.name){
             setData([...data, { userID: device.name, checked : false }]);
           }
+          manager.stopDeviceScan();
 
      });
 
@@ -87,7 +88,7 @@ const Home = ({navigation}) => {
         }}
       />
       <FlatList
-        keyExtractor={(item) => item}
+        keyExtractor={(item) => item.userID}
         data={data}
         renderItem={({ item, index }) => (
           <View>
