@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, View, FlatList, Image } from 'react-native';
+import { Icon } from 'react-native-elements'
 import { globalStylesheet } from '../assets/globalStylesheet';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
@@ -7,10 +8,8 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 function Item({ item }) {
   return (
     <View style={globalStylesheet.listItem}>
-      <Image source={{uri:'https://cdn-icons-png.flaticon.com/512/1946/1946392.png'}}  style={{width:50, height:50,borderRadius:20}} />
-      <View style={{alignItems:"center",flex:1}}>
-        <Text style={globalStylesheet.txt}>{item.name}</Text>
-      </View>
+      <Icon name='person-outline' style={globalStylesheet.icon}/>
+      <Text style={globalStylesheet.txt}>{item.name}</Text>
     </View>
   );
 }
@@ -18,9 +17,10 @@ function Item({ item }) {
 export default class App extends React.Component {
   state = {
     data:[
-        {"name": "Device 1"},
-        {"name": "Device 2"},
-        {"name": "Device 3"},
+        {"name": "trangH"},
+        {"name": "frankieG"},
+        {"name": "paulG"},
+
     ]
   }
 

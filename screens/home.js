@@ -32,7 +32,7 @@ export default function Home({navigation}) {
         onPress={() => {
           // If userID valid -> Add to the list
           if (userID) {
-            setData([...data, { id: 0, userID: userID, isChecked: false }]);
+            setData([...data, {userID: userID, isChecked: false }]);
             setUserID('');
           } 
           // If userID unvalid or missing input -> Display alert dialog to redirect to home screen
@@ -50,6 +50,7 @@ export default function Home({navigation}) {
         renderItem={({ item, index }) => (
           <View>
             <CheckBox
+              style={globalStylesheet.txt}
               title={item.userID}
               checked={item.isChecked}
               // onPress={() => item.isChecked(item.id=== true)}
