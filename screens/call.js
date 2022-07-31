@@ -47,7 +47,7 @@ export default class App extends React.Component {
 
   constructor(props){
     super();
-    this.manager = new BleManager();
+    this.manager = props.navigation.state.params.managerParam;
 
     this.searchedDevice = [];
     this.connected = false;
@@ -56,7 +56,7 @@ export default class App extends React.Component {
     // only pushing one for today, rather than loop
     let devices = props.navigation.state.params; 
 
-    let firstDevice = devices.otherParam
+    let firstDevice = devices.deviceParam
     console.log('Firrst device' + firstDevice)
 
     if(this.searchedDevice.indexOf(firstDevice) === -1){
@@ -115,9 +115,9 @@ export default class App extends React.Component {
                 console.log(device.discoverAllServicesAndCharacteristics())
                 return device.discoverAllServicesAndCharacteristics()
             })
-            .then((device) => {
+            .then((sersAndChars) => {
                 console.log("Working with device")
-                console.log(device)
+                console.log(sersAndChars)
                // Do work on device with services and characteristics
             })
             .catch((error) => {

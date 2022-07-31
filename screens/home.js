@@ -20,10 +20,13 @@ const Home = ({navigation}) => {
             subscription.remove();
             setTimeout(function(){
               manager.stopDeviceScan();
-            }, 5000);
+            }, 20000);
         }
     }, true);
-    return () => subscription.remove();
+    return () => {
+      subscription.remove();
+    }
+
   }, [manager]);
 
 
@@ -35,7 +38,7 @@ const Home = ({navigation}) => {
             return object.userID === device.name
           })
           if(index === -1 && device.name){
-            setData([...data, { userID: device.name, checked : false }]);
+            setData([...data, { userID: device.name, isChecked : false }]);
           }
           manager.stopDeviceScan();
 
@@ -46,13 +49,18 @@ const Home = ({navigation}) => {
 
 
   const connectBtn = () => {
-    console.log(JSON.stringify(data))
-    // if(manager){
-    //   manager.destroy();
-    // }
-    // navigation.navigate('Call', {
-    //   otherParam: data[1].userID
-    // })
+
+    //find the one which is checked
+    const index = data.findIndex(object =>{
+      return object.isChecked === true
+    })
+
+    navigation.navigate('Call', {
+      deviceParam: data[index].userID,
+      managerParam: manager
+    })
+    
+
   };
 
 
@@ -105,7 +113,7 @@ const Home = ({navigation}) => {
       />
       
 
-      <Button title='Connect' onPress={connectBtn}/>
+      <Button title='Connect' onPress={() => connectBtn()}/>
     </View>
   );
 }
