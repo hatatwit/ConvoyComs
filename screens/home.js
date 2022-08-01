@@ -14,11 +14,16 @@ const Home = ({navigation}) => {
 
   useEffect(() => {
 
+    if(!manager){
+      setManager(new BleManager());
+    }
+
+
     const subscription = manager.onStateChange((state) => {
         if (state === 'PoweredOn') {
             scanAndConnect();
             subscription.remove();
-            setTimeout(function(){
+            setTimeout(() =>{
               manager.stopDeviceScan();
             }, 20000);
         }
@@ -27,20 +32,25 @@ const Home = ({navigation}) => {
       subscription.remove();
     }
 
-  }, [manager]);
+  }, []);
 
 
   const scanAndConnect = () => {
   
-    manager.startDeviceScan(null, null, (error, device) => { 
+    manager.startDeviceScan(null, {allowDuplicates:false}, (error, device) => { 
+          if(error){
+            console.log('error, stopping device scan')
+            this.manager.stopDeviceScan();
+          }
 
           const index = data.findIndex(object =>{
             return object.userID === device.name
           })
           if(index === -1 && device.name){
-            setData([...data, { userID: device.name, isChecked : false }]);
+            let newData = data;
+            newData.push({userID:device.name, isChecked:false})
+            setData(newData);
           }
-          manager.stopDeviceScan();
 
      });
 
@@ -56,7 +66,7 @@ const Home = ({navigation}) => {
     })
 
     navigation.navigate('Call', {
-      deviceParam: data[index].userID,
+      deviceName: data[index].userID,
       managerParam: manager
     })
     
@@ -111,7 +121,8 @@ const Home = ({navigation}) => {
           </View>
         )}
       />
-      
+      <Button title='Connect' onPress={() => {console.log(data)}}/>
+
 
       <Button title='Connect' onPress={() => connectBtn()}/>
     </View>
