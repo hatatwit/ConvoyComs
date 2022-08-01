@@ -99,10 +99,8 @@ export default class App extends React.Component {
 
   scanAndConnect() {
 
-
     this.manager.startDeviceScan(null, null, (error, device) => {
         // To avoid bluetooth access errors, use the permissions API
-
         if (error) {
             console.log("Scan operation error: " + JSON.stringify(error))
             // Handle error (scanning will be stopped automatically)
@@ -112,7 +110,6 @@ export default class App extends React.Component {
         // Check if it is a device you are looking for based on advertisement data
         // or other criteria.
         console.log('device.id is ' + device.id + " : " + device.name)
-        // its bluetooth addres is B5:BD:36:27:D4:F6
         if (device.name === this.state.searchDevices[0]) {
           // need some way to alert the user when this happens.
           this.canConnect = true;
@@ -120,28 +117,9 @@ export default class App extends React.Component {
           this.state.availableDevices.push(device)
 
           this.manager.stopDeviceScan();
-
-            // Proceed with connection.
-
-          
-          // device.connect()
-          //   .then((device) => {
-          //       console.log(device.discoverAllServicesAndCharacteristics())
-          //       return device.discoverAllServicesAndCharacteristics()
-          //   })
-          //   .then((sersAndChars) => {
-          //       console.log("Working with device")
-          //       console.log(sersAndChars)
-          //      // Do work on device with services and characteristics
-          //   })
-          //   .catch((error) => {
-          //       // Handle errors
-          //       console.log("error" + JSON.stringify(error))
-          //   });            
-            
         }
-        
     });
+
 }
 
 componentWillUnmount() {
@@ -153,11 +131,7 @@ componentWillUnmount() {
 
 connectDevice(){
   console.log('call button press')
-  console.log("type of available device " + typeof(this.state.availableDevices))
-  console.log("available device object again : \n" + this.state.availableDevices)
   console.log("JSON OF AVAILABLE OBJECT : \n" + JSON.stringify(this.state.availableDevices))
-
-
   this.manager.stopDeviceScan();
   this.manager.connectToDevice(this.state.availableDevices[0].id, {autoConnect:true}).then(async device =>{
     await device.discoverAllServicesAndCharacteristics();
@@ -167,7 +141,7 @@ connectDevice(){
     device.services().then(async service => {
       for (const ser of service) {
         ser.characteristics().then(characteristic =>{
-          console.log("Characteristics of device " + device.name + " \n:")
+          console.log("Characteristics of device " + device.name + ": \n")
           console.log(JSON.stringify(characteristic))
         })
       }

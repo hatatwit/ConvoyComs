@@ -7,6 +7,9 @@
   <uses-permission android:name="android.permission.VIBRATE"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
+  <!-- Adding in for possibility some bluetooth devices may ask for it-->
+  <uses-permission android:name="android.permission.READ_CALL_LOG"/>
+  <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
   <!-- Add this line if your application always requires BLE. More info can be found on:
       https://developer.android.com/guide/topics/connectivity/bluetooth-le.html#permissions
