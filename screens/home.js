@@ -121,7 +121,6 @@ const Home = ({navigation}) => {
           </View>
         )}
       />
-      <Button title='Connect' onPress={() => {console.log(data)}}/>
 
 
       <Button title='Connect' onPress={() => connectBtn()}/>

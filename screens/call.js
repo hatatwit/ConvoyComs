@@ -7,28 +7,28 @@ import {BleManager} from 'react-native-ble-plx';
 
 
 
-const requestBluetoothPermission = async (props, component) =>{
+// const requestBluetoothPermission = async (props, component) =>{
 
-  try {
-      const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
-          {
-              title:"Coolio Bluetooth Permission Request",
-              message: "GIVE US BEEGLETOOTH NOW",
-              buttonNeutral: "Ask me later",
-              buttonNegative: "Cancel",
-              buttonPositive: "OK"
-          }
-      );
-      if(granted == PermissionsAndroid.RESULTS.GRANTED){
-          console.log("You can use the bluetooth")
-      } else {
-          console.log("Bluetooth permission denied")
-      }
-  } catch(err){
-      console.warn(err)
-  }
-}
+//   try {
+//       const granted = await PermissionsAndroid.request(
+//           PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+//           {
+//               title:"Coolio Bluetooth Permission Request",
+//               message: "GIVE US BEEGLETOOTH NOW",
+//               buttonNeutral: "Ask me later",
+//               buttonNegative: "Cancel",
+//               buttonPositive: "OK"
+//           }
+//       );
+//       if(granted == PermissionsAndroid.RESULTS.GRANTED){
+//           console.log("You can use the bluetooth")
+//       } else {
+//           console.log("Bluetooth permission denied")
+//       }
+//   } catch(err){
+//       console.warn(err)
+//   }
+// }
 
 
 function Item({ item }) {
@@ -40,6 +40,16 @@ function Item({ item }) {
       </View>
     </View>
   );
+}
+
+function RenderingActiveDevices( {item} ){
+    return (
+      <View style={globalStylesheet.listItem}>
+      <View style={{alignItems:"center",flex:1}}>
+        <Text>{item.deviceName}{item._characteristic}</Text>
+      </View>
+    </View>
+    )
 }
 
 export default class App extends React.Component {
@@ -73,7 +83,7 @@ export default class App extends React.Component {
 
       ],
 
-      connectedDevices: [
+      connectedDevices : [
 
       ]
       
@@ -114,6 +124,7 @@ export default class App extends React.Component {
           // need some way to alert the user when this happens.
           this.canConnect = true;
           console.log("device obj pushed : \n" + device)
+          alert("found " + device.name)
           this.state.availableDevices.push(device)
 
           this.manager.stopDeviceScan();
@@ -130,22 +141,37 @@ componentWillUnmount() {
 
 
 connectDevice(){
-  console.log('call button press')
-  console.log("JSON OF AVAILABLE OBJECT : \n" + JSON.stringify(this.state.availableDevices))
+  console.log('call button press');
+  console.log("JSON OF AVAILABLE OBJECT : \n" + JSON.stringify(this.state.availableDevices));
   this.manager.stopDeviceScan();
   this.manager.connectToDevice(this.state.availableDevices[0].id, {autoConnect:true}).then(async device =>{
     await device.discoverAllServicesAndCharacteristics();
     this.manager.stopDeviceScan();
-    this.state.connectedDevices.push(device)
 
     device.services().then(async service => {
       for (const ser of service) {
         ser.characteristics().then(characteristic =>{
           console.log("Characteristics of device " + device.name + ": \n")
-          console.log(JSON.stringify(characteristic))
+          console.log(JSON.stringify(characteristic)) 
+
+          // Read Service UUID & Read isWritableWith/WithNoResponse:true
+          let serviceUUID = characteristic[0].serviceUUID
+          let isWritableWithoutResponse = characteristic[0].isWritableWithoutResponse
+          let isWritableWithResponse = characteristic[0].isWritableWithResponse
+
+          if(serviceUUID.endsWith("00805f9b34fb") & (isWritableWithoutResponse || isWritableWithResponse)){
+
+            // Add it to connectedDevices (connectedDevices will be rendered)
+            this.state.connectedDevices.push({deviceName:device.name, _characteristic:' Has General Access Service Available'})
+            console.log('connected Devices state : ' + JSON.stringify(this.state.connectedDevices))
+            this.forceUpdate();
+          }
+
         })
       }
+
     })
+
   })
 
   
@@ -154,6 +180,8 @@ connectDevice(){
 seeConnected() {
   console.log(BleManager.connctedDevices());
 }
+
+
   
 
   render(){    
@@ -161,13 +189,21 @@ seeConnected() {
     return (
 
       <View style={globalStylesheet.container}>
-        <Button title="request bluetooth" onPress={requestBluetoothPermission} />
+        {/* <Button title="request bluetooth" onPress={requestBluetoothPermission} /> */}
 
         <FlatList
           style={{flex:1}}
           data={this.state.searchDevices}
           renderItem={({ item }) => <Item item={item}/>}
         />
+
+        <FlatList
+          style={{flex:1}}
+          data={this.state.connectedDevices}
+          renderItem={({ item }) => <RenderingActiveDevices item={item}/>}
+        />
+
+
         <View style={globalStylesheet.btnContainer}>
           <FontAwesome.Button name='phone' style={globalStylesheet.btn} onPress = {() => this.connectDevice()}  />
           <FontAwesome.Button name='microphone' style={globalStylesheet.btn}  />

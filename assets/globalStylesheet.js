@@ -24,7 +24,6 @@ export const globalStylesheet = StyleSheet.create({
     },
     btn: {
       backgroundColor: "#000000",
-      padding: 30, 
-      borderRadius: 40
+      padding: 30
     },
   });
